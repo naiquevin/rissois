@@ -35,30 +35,43 @@ fn level_to_indent(level: &Option<u32>) -> u32 {
 }
 
 /// Returns an indented line given the line and indent (no. of spaces)
-fn indent_line(line: String, indent: u32) -> String {
+fn indent_line(line: &String, indent: u32) -> String {
     let prefix = " ".repeat(indent.try_into().unwrap());
-    let parts = vec![prefix, line];
-    parts.join("")
+    format!("{}{}", prefix, line)
 }
 
-fn main() {
-    let stdin = io::stdin();
+/// Returns lines hard indented (to the headings in an org file)
+fn hard_indent_org(lines: Vec<String>) {
     let mut curr_level: Option<u32> = None;
-    for line in stdin.lines() {
-        let s = line.unwrap();
-        match heading_level(&s) {
+    for line in lines.iter() {
+        match heading_level(&line) {
             Some(level) => {
                 curr_level = Some(level);
-                println!("{}", s);
+                println!("{}", line);
             }
             None => {
-                if s == "" {
-                    println!("{}", s);
+                if line == "" {
+                    println!("{}", line);
                 } else {
                     let indent = level_to_indent(&curr_level);
-                    println!("{}", indent_line(s, indent));
+                    println!("{}", indent_line(line, indent));
                 }
             }
         }
     }
+}
+
+fn stdin_to_vec() -> Vec<String> {
+    let stdin = io::stdin();
+    let mut result = Vec::new();
+    for line in stdin.lines() {
+        let s = line.unwrap();
+        result.push(s);
+    }
+    result
+}
+
+fn main() {
+    let lines = stdin_to_vec();
+    hard_indent_org(lines);
 }
