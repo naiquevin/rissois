@@ -40,22 +40,25 @@ fn indent_line(line: &String, indent: u32) -> String {
 }
 
 /// Returns lines hard indented (to the headings in an org file)
-pub fn hard_indent_org(lines: Vec<String>) {
+pub fn hard_indent_org(lines: &Vec<String>) -> Vec<String> {
+    let mut result: Vec<String> = Vec::new();
     let mut curr_level: Option<u32> = None;
     for line in lines.iter() {
         match heading_level(&line) {
             Some(level) => {
                 curr_level = Some(level);
-                println!("{}", line);
+                result.push(format!("{}", line));
             }
             None => {
                 if line == "" {
-                    println!("{}", line);
+                    result.push(format!("{}", line));
                 } else {
                     let indent = level_to_indent(&curr_level);
-                    println!("{}", indent_line(line, indent));
+                    result.push(indent_line(line, indent));
                 }
             }
         }
     }
+    result
+}
 }

@@ -13,7 +13,14 @@ fn stdin_to_vec() -> Vec<String> {
     result
 }
 
+fn vec_to_stdout(lines: Vec<String>) {
+    for line in lines.iter() {
+        println!("{}", line);
+    }
+}
+
 fn main() {
-    let lines = stdin_to_vec();
-    indent::hard_indent_org(lines);
+    let input_lines = stdin_to_vec();
+    let output_lines = indent::hard_indent_org(&input_lines);
+    vec_to_stdout(output_lines);
 }
