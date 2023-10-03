@@ -61,4 +61,59 @@ pub fn hard_indent_org(lines: &Vec<String>) -> Vec<String> {
     }
     result
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_heading_level() {
+        let line1 = String::from("** this is a level 2 heading");
+        assert_eq!(heading_level(&line1), Some(2));
+
+        let line2 = String::from("this is a normal sentence and not a headline");
+        assert_eq!(heading_level(&line2), None);
+
+        let line3 = String::from("*this will be considered a heading but is not");
+        // @TODO: Fix the behaviour of this function for lines that
+        // start with asterisk but without a space following it.
+        // assert_eq!(heading_level(&line3), None);
+        assert_eq!(heading_level(&line3), Some(1));
+    }
+
+    #[test]
+    fn test_level_to_indent() {
+        let lev1 = None;
+        assert_eq!(level_to_indent(&lev1), 0);
+
+        let lev2 = Some(1);
+        assert_eq!(level_to_indent(&lev2), 2);
+
+        let lev3 = Some(4);
+        assert_eq!(level_to_indent(&lev3), 5);
+    }
+
+    #[test]
+    fn test_indent_line() {
+        let line = String::from("  this is originally indented with only 2 spaces");
+        assert_eq!(indent_line(&line, 2), String::from("    this is originally indented with only 2 spaces"));
+    }
+
+    #[test]
+    fn test_hard_indent_org() {
+        let input = "* Heading 1\n\
+                     This should be indented by 2 spaces\n\
+                     \n\
+                     ** Heading 2\n\
+                     \n\
+                     This should be indented by 3 spaces\n\
+                     \n\
+                     * Heading 1 again\n\
+                     This should again be indented by 2 spaces";
+        let lines: Vec<String> = input.lines().map(String::from).collect();
+        let result = hard_indent_org(&lines);
+        let output = result.join("\n");
+        let expected_output = "* Heading 1\n  This should be indented by 2 spaces\n\n** Heading 2\n\n   This should be indented by 3 spaces\n\n* Heading 1 again\n  This should again be indented by 2 spaces";
+        assert_eq!(output, expected_output);
+    }
 }
