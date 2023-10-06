@@ -1,4 +1,5 @@
 use std::io;
+use clap::{Parser, Subcommand};
 
 mod indent;
 
@@ -19,8 +20,39 @@ fn vec_to_stdout(lines: Vec<String>) {
     }
 }
 
+#[derive(Subcommand)]
+enum Commands {
+
+    #[command(about="Hard indent org content as per the headlines")]
+    Indent {
+        #[arg(long, help="Read text from std input")]
+        stdin: bool,
+    }
+}
+
+#[derive(Parser)]
+#[command(version, about)]
+struct Cli {
+
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
 fn main() {
-    let input_lines = stdin_to_vec();
-    let output_lines = indent::hard_indent_org(&input_lines);
-    vec_to_stdout(output_lines);
+    let cli = Cli::parse();
+
+    match &cli.command {
+        Some(Commands::Indent { stdin }) => {
+            if *stdin {
+                let input_lines = stdin_to_vec();
+                let output_lines = indent::hard_indent_org(&input_lines);
+                vec_to_stdout(output_lines);
+            } else {
+                println!("File support not implemented. Please use --stdin for now")
+            }
+        },
+        None => {
+            println!("Please specify the subcommand")
+        }
+    }
 }
