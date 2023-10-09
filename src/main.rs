@@ -22,7 +22,7 @@ fn vec_to_stdout(lines: Vec<String>) {
 }
 
 #[derive(Subcommand)]
-enum Commands {
+enum Command {
 
     #[command(about="Hard indent org content as per the headlines")]
     Indent {
@@ -36,7 +36,7 @@ enum Commands {
 struct Cli {
 
     #[command(subcommand)]
-    command: Option<Commands>,
+    command: Option<Command>,
 }
 
 fn indent(stdin: bool) -> Result<(), String> {
@@ -55,7 +55,7 @@ impl Cli {
 
     fn execute(&self) -> Result<(), String> {
         match self.command {
-            Some(Commands::Indent { stdin }) => indent(stdin),
+            Some(Command::Indent { stdin }) => indent(stdin),
             None => {
                 let errmsg = String::from("Please specify the subcommand");
                 Err(errmsg)
