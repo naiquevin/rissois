@@ -1,5 +1,6 @@
 use std::convert::TryInto;
 
+use crate::ioutil;
 
 /// Returns the level of org heading for a line
 ///
@@ -60,6 +61,18 @@ pub fn hard_indent_org(lines: &Vec<String>) -> Vec<String> {
         }
     }
     result
+}
+
+pub fn cli_indent(stdin: bool) -> Result<(), String> {
+    if stdin {
+        let input_lines = ioutil::stdin_to_vec();
+        let output_lines = hard_indent_org(&input_lines);
+        ioutil::vec_to_stdout(output_lines);
+        Ok(())
+    } else {
+        let errmsg = String::from("File support not implemented. Please use --stdin for now");
+        Err(errmsg)
+    }
 }
 
 #[cfg(test)]
