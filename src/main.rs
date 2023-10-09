@@ -27,7 +27,7 @@ impl Cli {
 
     fn execute(&self) -> Result<(), String> {
         match self.command {
-            Some(Command::Indent { stdin }) => indent::cli_indent(stdin),
+            Some(Command::Indent { stdin }) => indent::cli::execute(stdin),
             None => {
                 let errmsg = String::from("Please specify the subcommand");
                 Err(errmsg)
