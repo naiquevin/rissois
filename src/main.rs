@@ -1,30 +1,26 @@
-use std::process;
 use clap::{Parser, Subcommand};
+use std::process;
 
 mod indent;
 mod ioutil;
 
-
 #[derive(Subcommand)]
 enum Command {
-
-    #[command(about="Hard indent org content as per the headlines")]
+    #[command(about = "Hard indent org content as per the headlines")]
     Indent {
-        #[arg(long, help="Read text from std input")]
+        #[arg(long, help = "Read text from std input")]
         stdin: bool,
-    }
+    },
 }
 
 #[derive(Parser)]
 #[command(version, about)]
 struct Cli {
-
     #[command(subcommand)]
     command: Option<Command>,
 }
 
 impl Cli {
-
     fn execute(&self) -> Result<(), String> {
         match self.command {
             Some(Command::Indent { stdin }) => indent::cli::execute(stdin),

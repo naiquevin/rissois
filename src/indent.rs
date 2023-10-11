@@ -6,7 +6,7 @@ use std::convert::TryInto;
 /// returned
 fn heading_level(line: &String) -> Option<u32> {
     if line.starts_with("*") {
-        let mut level:u32 = 0;
+        let mut level: u32 = 0;
         for c in line.chars() {
             if c == '*' {
                 level = level + 1;
@@ -23,12 +23,8 @@ fn heading_level(line: &String) -> Option<u32> {
 /// Returns indent (no. of spaces) given org heading level
 fn level_to_indent(level: &Option<u32>) -> u32 {
     match level {
-        Some(num_asterisk) => {
-            num_asterisk + 1
-        }
-        None => {
-            0
-        }
+        Some(num_asterisk) => num_asterisk + 1,
+        None => 0,
     }
 }
 
@@ -78,7 +74,6 @@ pub mod cli {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -113,7 +108,10 @@ mod tests {
     #[test]
     fn test_indent_line() {
         let line = String::from("  this is originally indented with only 2 spaces");
-        assert_eq!(indent_line(&line, 2), String::from("    this is originally indented with only 2 spaces"));
+        assert_eq!(
+            indent_line(&line, 2),
+            String::from("    this is originally indented with only 2 spaces")
+        );
     }
 
     #[test]
