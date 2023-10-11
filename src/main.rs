@@ -3,6 +3,7 @@ use std::process;
 
 mod indent;
 mod ioutil;
+mod macos;
 
 #[derive(Subcommand)]
 enum Command {
