@@ -1,6 +1,8 @@
-use clap::{Parser, Subcommand};
+use clap::{self, Parser, Subcommand};
+use std::path::Path;
 use std::process;
 
+mod import;
 mod indent;
 mod ioutil;
 mod macos;
@@ -12,6 +14,23 @@ enum Command {
         #[arg(long, help = "Read text from std input")]
         stdin: bool,
     },
+
+    #[command(about = "Import notes from an existing file")]
+    Import {
+        #[arg(required = true, help = "Path to the source note file")]
+        filepath: String,
+        #[arg(required = true, help = "Path to the target directory")]
+        target_dir: String,
+        #[arg(short = 'p', value_enum, default_value_t = import::TsPrefix::Now, help = "Timestamp prefix")]
+        ts_prefix: import::TsPrefix,
+        #[arg(
+            short = 't',
+            help = "Title of the imported note. Will be derived from the source filename if not specified"
+        )]
+        title: Option<String>,
+        #[arg(long, help = "Dry run")]
+        dry_run: bool,
+    },
 }
 
 #[derive(Parser)]
@@ -22,9 +41,21 @@ struct Cli {
 }
 
 impl Cli {
-    fn execute(&self) -> Result<(), String> {
-        match self.command {
-            Some(Command::Indent { stdin }) => indent::cli::execute(stdin),
+    fn execute(self: &Self) -> Result<(), String> {
+        match &self.command {
+            Some(Command::Indent { stdin }) => indent::cli::execute(*stdin),
+            Some(Command::Import {
+                filepath,
+                target_dir,
+                title,
+                ts_prefix,
+                dry_run,
+            }) => {
+                let fp = Path::new(filepath);
+                let td = Path::new(target_dir);
+                let res = import::cli_import(&fp, &td, &ts_prefix, &title, dry_run)?;
+                Ok(res)
+            }
             None => {
                 let errmsg = String::from("Please specify the subcommand");
                 Err(errmsg)
