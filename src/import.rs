@@ -160,13 +160,13 @@ mod tests {
         let ts_from = TsPrefix::Now;
         let target = target_filepath(&target_dir, &src, &ts_from);
         let re = Regex::new(r"\d{14}-jvm.org").unwrap();
-        assert!(re.is_match(target.as_str()));
+        assert!(re.is_match(target.as_path().to_str().unwrap()));
 
         // The following file needs to exist
         let src = Path::new("/Users/vineet/Dropbox/notes/RabbitMQ.rst");
         let ts_from = TsPrefix::Created;
         let target = target_filepath(&target_dir, &src, &ts_from);
         let re = Regex::new(r"\d{14}-rabbit_mq.org").unwrap();
-        assert!(re.is_match(target.as_str()));
+        assert!(re.is_match(target.as_path().to_str().unwrap()));
     }
 }

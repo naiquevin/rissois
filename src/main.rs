@@ -1,5 +1,5 @@
 use clap::{self, Parser, Subcommand};
-use std::path::Path;
+use expanduser::expanduser;
 use std::process;
 
 mod import;
@@ -51,8 +51,8 @@ impl Cli {
                 ts_prefix,
                 dry_run,
             }) => {
-                let fp = Path::new(filepath);
-                let td = Path::new(target_dir);
+                let fp = expanduser(filepath).unwrap();
+                let td = expanduser(target_dir).unwrap();
                 let res = import::cli_import(&fp, &td, &ts_prefix, &title, dry_run)?;
                 Ok(res)
             }
