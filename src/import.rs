@@ -2,7 +2,7 @@ use crate::macos::fileinfo::FileInfo;
 use chrono::NaiveDateTime;
 use convert_case::{Case, Casing};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use uuid::Uuid;
 
 use clap;
@@ -53,7 +53,7 @@ fn ts_to_prefix(dt: &NaiveDateTime) -> String {
     dt.format("%Y%m%d%H%M%S").to_string()
 }
 
-fn target_filepath(target_dir: &Path, src: &Path, ts_prefix: &TsPrefix) -> String {
+fn target_filepath(target_dir: &Path, src: &Path, ts_prefix: &TsPrefix) -> PathBuf {
     let slug = filename_slug(src);
     let ts: NaiveDateTime = match ts_prefix {
         TsPrefix::Created => {
@@ -63,7 +63,11 @@ fn target_filepath(target_dir: &Path, src: &Path, ts_prefix: &TsPrefix) -> Strin
         TsPrefix::Now => chrono::offset::Local::now().naive_local(),
     };
     let prefix = ts_to_prefix(&ts);
-    format!("{}/{}-{}.org", target_dir.to_str().unwrap(), prefix, slug)
+    let mut target = PathBuf::new();
+    // format!("{}/{}-{}.org", target_dir.to_str().unwrap(), prefix, slug)
+    target.push(target_dir);
+    target.push(format!("{}-{}.org", prefix, slug));
+    target
 }
 
 #[allow(dead_code)]
@@ -100,8 +104,7 @@ pub fn cli_import(
     title: &Option<String>,
     dry_run: &bool,
 ) -> Result<(), String> {
-    let target_path_str = target_filepath(target_dir, filepath, ts_prefix);
-    let target = Path::new(&target_path_str);
+    let target = target_filepath(target_dir, filepath, ts_prefix);
     match target.try_exists() {
         Ok(false) => {
             let note_title = match title {
