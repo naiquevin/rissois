@@ -81,36 +81,36 @@ mod tests {
     #[test]
     fn test_heading_level() {
         let line1 = String::from("** this is a level 2 heading");
-        assert_eq!(heading_level(&line1), Some(2));
+        assert_eq!(Some(2), heading_level(&line1));
 
         let line2 = String::from("this is a normal sentence and not a headline");
-        assert_eq!(heading_level(&line2), None);
+        assert_eq!(None, heading_level(&line2));
 
         let line3 = String::from("*this will be considered a heading but is not");
         // @TODO: Fix the behaviour of this function for lines that
         // start with asterisk but without a space following it.
         // assert_eq!(heading_level(&line3), None);
-        assert_eq!(heading_level(&line3), Some(1));
+        assert_eq!(Some(1), heading_level(&line3));
     }
 
     #[test]
     fn test_level_to_indent() {
         let lev1 = None;
-        assert_eq!(level_to_indent(&lev1), 0);
+        assert_eq!(0, level_to_indent(&lev1));
 
         let lev2 = Some(1);
-        assert_eq!(level_to_indent(&lev2), 2);
+        assert_eq!(2, level_to_indent(&lev2));
 
         let lev3 = Some(4);
-        assert_eq!(level_to_indent(&lev3), 5);
+        assert_eq!(5, level_to_indent(&lev3));
     }
 
     #[test]
     fn test_indent_line() {
         let line = String::from("  this is originally indented with only 2 spaces");
         assert_eq!(
-            indent_line(&line, 2),
-            String::from("    this is originally indented with only 2 spaces")
+            String::from("    this is originally indented with only 2 spaces"),
+            indent_line(&line, 2)
         );
     }
 
@@ -129,6 +129,6 @@ mod tests {
         let result = hard_indent_org(&lines);
         let output = result.join("\n");
         let expected_output = "* Heading 1\n  This should be indented by 2 spaces\n\n** Heading 2\n\n   This should be indented by 3 spaces\n\n* Heading 1 again\n  This should again be indented by 2 spaces";
-        assert_eq!(output, expected_output);
+        assert_eq!(expected_output, output);
     }
 }

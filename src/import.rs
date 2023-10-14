@@ -136,15 +136,15 @@ mod tests {
 
     #[test]
     fn test_filename_slug() {
-        assert_eq!(filename_slug(Path::new("/path/to/MyFile.txt")), "my_file");
-        assert_eq!(filename_slug(Path::new("/path/to/My File.txt")), "my_file");
-        assert_eq!(filename_slug(Path::new("/path/to/my_File.txt")), "my_file");
-        assert_eq!(filename_slug(Path::new("/path/to/myFILE.txt")), "my_file");
+        assert_eq!("my_file", filename_slug(Path::new("/path/to/MyFile.txt")));
+        assert_eq!("my_file", filename_slug(Path::new("/path/to/My File.txt")));
+        assert_eq!("my_file", filename_slug(Path::new("/path/to/my_File.txt")));
+        assert_eq!("my_file", filename_slug(Path::new("/path/to/myFILE.txt")));
         assert_eq!(
-            filename_slug(Path::new("/path/to/myfile.log.txt")),
-            "myfile_log"
+            "myfile_log",
+            filename_slug(Path::new("/path/to/myfile.log.txt"))
         );
-        assert_eq!(filename_slug(Path::new("/path/to/my-file.txt")), "my_file");
+        assert_eq!("my_file", filename_slug(Path::new("/path/to/my-file.txt")));
     }
 
     #[test]
