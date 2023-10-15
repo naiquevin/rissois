@@ -71,7 +71,7 @@ fn main() {
     match result {
         Ok(()) => process::exit(0),
         Err(e) => {
-            eprintln!("Error {}", e);
+            eprintln!("Error: {}", e);
             process::exit(1)
         }
     }

@@ -70,7 +70,6 @@ fn target_filepath(target_dir: &Path, src: &Path, ts_prefix: &TsPrefix) -> PathB
     target
 }
 
-#[allow(dead_code)]
 fn note_skeleton(id: &Uuid, orig_filepath: &Path, title: &String) -> String {
     let orig_path_str = orig_filepath.to_str().unwrap();
     let org_dt_fmt = "[%Y-%m-%d %a %H:%M]";
@@ -95,8 +94,6 @@ fn note_skeleton(id: &Uuid, orig_filepath: &Path, title: &String) -> String {
     )
 }
 
-#[allow(dead_code)]
-#[allow(unused)]
 pub fn cli_import(
     filepath: &Path,
     target_dir: &Path,
@@ -118,11 +115,15 @@ pub fn cli_import(
                 println!("Target file: {}", target.to_str().unwrap());
                 println!("File contents:");
                 println!("{}", content);
+                Ok(())
             } else {
                 println!("Writing to file {}", target.to_str().unwrap());
-                fs::write(target, content);
+                let res = fs::write(target, content);
+                match res {
+                    Ok(()) => Ok(()),
+                    Err(s) => Err(s.to_string())
+                }
             }
-            Ok(())
         }
         Ok(true) => Err("File already exists. Aborting".to_string()),
         Err(_) => Err("Unable to check existence of target file".to_string()),
