@@ -1,0 +1,17 @@
+* Documentation of different workflows using this tool
+  For my own reference
+** Importing old notes into org-roam
+   This requires [[https://pandoc.org/][Pandoc]] to be installed
+   #+begin_src bash
+     # Create the binary if not already done
+     cargo build
+
+     # Create a skeleton for the note in org-roam. Contents will be added in next command
+     ./target/debug/rissois import -p created ~/Dropbox/notes/Gevent.md ~/Dropbox/RoamNotes
+
+     # Use pandoc to convert from markdown to org,
+     # remove the unnecessary property drawers,
+     # hard indent the org content,
+     # then append the output to the org roam file created by the previous command
+     pandoc -t org ~/Dropbox/notes/Gevent.md | sed -E "/^[[:space:]]?:/ d" | ./target/debug/rissois indent --stdin >> ~/Dropbox/RoamNotes/20130221223303-gevent.org
+   #+end_src
