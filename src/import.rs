@@ -1,7 +1,6 @@
 use crate::macos::fileinfo::FileInfo;
 use chrono::NaiveDateTime;
 use convert_case::{Case, Casing};
-use std::fs;
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
 
@@ -94,39 +93,45 @@ fn note_skeleton(id: &Uuid, orig_filepath: &Path, title: &String) -> String {
     )
 }
 
-pub fn cli_import(
-    filepath: &Path,
-    target_dir: &Path,
-    ts_prefix: &TsPrefix,
-    title: &Option<String>,
-    dry_run: &bool,
-) -> Result<(), String> {
-    let target = target_filepath(target_dir, filepath, ts_prefix);
-    match target.try_exists() {
-        Ok(false) => {
-            let note_title = match title {
-                Some(s) => s.clone(),
-                None => make_title(&filepath),
-            };
-            let note_id = Uuid::new_v4();
-            let content = note_skeleton(&note_id, &filepath, &note_title);
-            if *dry_run {
-                println!("Running in dry-run mode");
-                println!("Target file: {}", target.to_str().unwrap());
-                println!("File contents:");
-                println!("{}", content);
-                Ok(())
-            } else {
-                println!("Writing to file {}", target.to_str().unwrap());
-                let res = fs::write(target, content);
-                match res {
-                    Ok(()) => Ok(()),
-                    Err(s) => Err(s.to_string())
+pub mod cli {
+
+    use super::*;
+    use std::fs;
+
+    pub fn execute(
+        filepath: &Path,
+        target_dir: &Path,
+        ts_prefix: &TsPrefix,
+        title: &Option<String>,
+        dry_run: &bool,
+    ) -> Result<(), String> {
+        let target = target_filepath(target_dir, filepath, ts_prefix);
+        match target.try_exists() {
+            Ok(false) => {
+                let note_title = match title {
+                    Some(s) => s.clone(),
+                    None => make_title(&filepath),
+                };
+                let note_id = Uuid::new_v4();
+                let content = note_skeleton(&note_id, &filepath, &note_title);
+                if *dry_run {
+                    println!("Running in dry-run mode");
+                    println!("Target file: {}", target.to_str().unwrap());
+                    println!("File contents:");
+                    println!("{}", content);
+                    Ok(())
+                } else {
+                    println!("Writing to file {}", target.to_str().unwrap());
+                    let res = fs::write(target, content);
+                    match res {
+                        Ok(()) => Ok(()),
+                        Err(s) => Err(s.to_string()),
+                    }
                 }
             }
+            Ok(true) => Err("File already exists. Aborting".to_string()),
+            Err(_) => Err("Unable to check existence of target file".to_string()),
         }
-        Ok(true) => Err("File already exists. Aborting".to_string()),
-        Err(_) => Err("Unable to check existence of target file".to_string()),
     }
 }
 

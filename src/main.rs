@@ -53,7 +53,7 @@ impl Cli {
             }) => {
                 let fp = expanduser(filepath).unwrap();
                 let td = expanduser(target_dir).unwrap();
-                let res = import::cli_import(&fp, &td, &ts_prefix, &title, dry_run)?;
+                let res = import::cli::execute(&fp, &td, &ts_prefix, &title, dry_run)?;
                 Ok(res)
             }
             None => {
