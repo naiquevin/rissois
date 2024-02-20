@@ -4,8 +4,6 @@ use convert_case::{Case, Casing};
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
 
-use clap;
-
 //
 // - Write a org file inside a directory with a derived name
 //   - name = "<timestamp>-<underscore_separated_name>.org"
@@ -41,7 +39,7 @@ fn filename_slug(filepath: &Path) -> String {
         .to_str()
         .unwrap()
         .to_case(Case::Snake)
-        .replace(".", "_")
+        .replace('.', "_")
 }
 
 fn make_title(filepath: &Path) -> String {
@@ -110,10 +108,10 @@ pub mod cli {
             Ok(false) => {
                 let note_title = match title {
                     Some(s) => s.clone(),
-                    None => make_title(&filepath),
+                    None => make_title(filepath),
                 };
                 let note_id = Uuid::new_v4();
-                let content = note_skeleton(&note_id, &filepath, &note_title);
+                let content = note_skeleton(&note_id, filepath, &note_title);
                 if *dry_run {
                     println!("Running in dry-run mode");
                     println!("Target file: {}", target.to_str().unwrap());

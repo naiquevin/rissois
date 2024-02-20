@@ -41,7 +41,7 @@ struct Cli {
 }
 
 impl Cli {
-    fn execute(self: &Self) -> Result<(), String> {
+    fn execute(&self) -> Result<(), String> {
         match &self.command {
             Some(Command::Indent { stdin }) => indent::cli::execute(*stdin),
             Some(Command::Import {
@@ -53,8 +53,7 @@ impl Cli {
             }) => {
                 let fp = expanduser(filepath).unwrap();
                 let td = expanduser(target_dir).unwrap();
-                let res = import::cli::execute(&fp, &td, &ts_prefix, &title, dry_run)?;
-                Ok(res)
+                import::cli::execute(&fp, &td, ts_prefix, title, dry_run)
             }
             None => {
                 let errmsg = String::from("Please specify the subcommand");

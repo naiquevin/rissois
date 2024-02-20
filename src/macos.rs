@@ -7,7 +7,7 @@ pub mod fileinfo {
     use chrono::{NaiveDateTime, ParseError};
     use regex::Regex;
 
-    fn str_to_dt(s: &String) -> Result<NaiveDateTime, ParseError> {
+    fn str_to_dt(s: &str) -> Result<NaiveDateTime, ParseError> {
         NaiveDateTime::parse_from_str(s, "%m/%d/%Y %H:%M:%S")
     }
 

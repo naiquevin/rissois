@@ -4,12 +4,12 @@ use std::convert::TryInto;
 ///
 /// If the line is not found to be an org heading, None is
 /// returned
-fn heading_level(line: &String) -> Option<u32> {
-    if line.starts_with("*") {
+fn heading_level(line: &str) -> Option<u32> {
+    if line.starts_with('*') {
         let mut level: u32 = 0;
         for c in line.chars() {
             if c == '*' {
-                level = level + 1;
+                level += 1;
             } else {
                 break;
             }
@@ -35,18 +35,18 @@ fn indent_line(line: &String, indent: u32) -> String {
 }
 
 /// Returns lines hard indented (to the headings in an org file)
-pub fn hard_indent_org(lines: &Vec<String>) -> Vec<String> {
+pub fn hard_indent_org(lines: &[String]) -> Vec<String> {
     let mut result: Vec<String> = Vec::new();
     let mut curr_level: Option<u32> = None;
     for line in lines.iter() {
-        match heading_level(&line) {
+        match heading_level(line) {
             Some(level) => {
                 curr_level = Some(level);
-                result.push(format!("{}", line));
+                result.push(line.to_string());
             }
             None => {
-                if line == "" {
-                    result.push(format!("{}", line));
+                if line.is_empty() {
+                    result.push(line.to_string());
                 } else {
                     let indent = level_to_indent(&curr_level);
                     result.push(indent_line(line, indent));
