@@ -15,3 +15,13 @@
      # then append the output to the org roam file created by the previous command
      pandoc -t org ~/Dropbox/notes/Gevent.md | sed -E "/^[[:space:]]?:/ d" | ./target/debug/rissois indent --stdin >> ~/Dropbox/RoamNotes/20130221223303-gevent.org
    #+end_src
+
+   Open the file in emacs and verify that everything is correctly imported.
+
+   Then run ~org-roam-db-sync~ from emacs to update the org-roam db as
+   the file was added externally.
+
+   Finally, remove the old notes file to clear up the space
+   #+begin_src bash
+     rm ~/Dropbox/notes/Gevent.md
+   #+end_src
