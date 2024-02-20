@@ -53,7 +53,7 @@ impl Cli {
             }) => {
                 let fp = expanduser(filepath).unwrap();
                 let td = expanduser(target_dir).unwrap();
-                import::cli::execute(&fp, &td, ts_prefix, title, dry_run)
+                import::cli::execute(&fp, &td, ts_prefix, title.as_ref(), dry_run)
             }
             None => {
                 let errmsg = String::from("Please specify the subcommand");

@@ -100,16 +100,13 @@ pub mod cli {
         filepath: &Path,
         target_dir: &Path,
         ts_prefix: &TsPrefix,
-        title: &Option<String>,
+        title: Option<&String>,
         dry_run: &bool,
     ) -> Result<(), String> {
         let target = target_filepath(target_dir, filepath, ts_prefix);
         match target.try_exists() {
             Ok(false) => {
-                let note_title = match title {
-                    Some(s) => s.clone(),
-                    None => make_title(filepath),
-                };
+                let note_title = title.cloned().unwrap_or_else(|| make_title(filepath));
                 let note_id = Uuid::new_v4();
                 let content = note_skeleton(&note_id, filepath, &note_title);
                 if *dry_run {
