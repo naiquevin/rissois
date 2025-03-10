@@ -30,8 +30,7 @@ enum Command {
             help = "Title of the imported note. Will be derived from the source filename if not specified"
         )]
         title: Option<String>,
-        // @TODO: Support short here
-        #[arg(long, help = "Dry run")]
+        #[arg(long, short = 'd', help = "Dry run")]
         dry_run: bool,
     },
     #[command(about = "Import notes from a pdf file")]
