@@ -50,7 +50,7 @@ fn ts_to_prefix(dt: &NaiveDateTime) -> String {
     dt.format("%Y%m%d%H%M%S").to_string()
 }
 
-fn target_filepath(target_dir: &Path, src: &Path, ts_prefix: &TsPrefix) -> PathBuf {
+pub fn target_filepath(target_dir: &Path, src: &Path, ts_prefix: &TsPrefix) -> PathBuf {
     let slug = filename_slug(src);
     let ts: NaiveDateTime = match ts_prefix {
         TsPrefix::Created => {
@@ -111,9 +111,9 @@ pub mod cli {
                 let content = note_skeleton(&note_id, filepath, &note_title);
                 if *dry_run {
                     println!("Running in dry-run mode");
-                    println!("Target file: {}", target.to_str().unwrap());
+                    println!("Target file: {}", target.display());
                     println!("File contents:");
-                    println!("{}", content);
+                    println!("{content}");
                     Ok(())
                 } else {
                     println!("Writing to file {}", target.to_str().unwrap());

@@ -25,3 +25,17 @@
    #+begin_src bash
      rm ~/Dropbox/notes/Gevent.md
    #+end_src
+
+** Syncing files from Apple notes
+   For now the workflow is very rudimentary and manual, but can be
+   improved later.
+*** Exporting apple notes to pdf
+    - This can be done by "printing" the file into pdf
+    - The pdf is exported to Dropbox folder =~/Dropbox/appleNotesSync=
+*** Importing from pdf in dropbox
+    Example:
+    #+begin_src bash
+      cargo run -- pdf-import ~/Dropbox/appleNotesSync/Pgconf\ India\ 2025.pdf ~/organon/roam
+    #+end_src
+**** (Optional) Delete the file in dropbox
+**** (Delete) Delete the file in apple notes

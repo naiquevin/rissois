@@ -10,5 +10,6 @@ chrono = "0.4.31"
 clap = { version = "4.4.6", features = ["derive"] }
 convert_case = "0.6.0"
 expanduser = "1.2.2"
+pdf-extract = "0.8.2"
 regex = "1.10.0"
 uuid = { version = "1.4.1", features = ["v4"] }
