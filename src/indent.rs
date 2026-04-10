@@ -49,7 +49,12 @@ pub fn hard_indent_org(lines: &[String]) -> Vec<String> {
                     result.push(line.to_string());
                 } else {
                     let indent = level_to_indent(&curr_level);
-                    result.push(indent_line(line, indent));
+                    let existing_indent = line
+                        .chars()
+                        .take_while(|&c| c == ' ')
+                        .count() as u32;
+                    let adjust_indent = indent.saturating_sub(existing_indent);
+                    result.push(indent_line(line, adjust_indent));
                 }
             }
         }
